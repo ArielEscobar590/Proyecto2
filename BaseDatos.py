@@ -24,6 +24,9 @@ class Motores:
         self.total_ventas = total_ventas
         self.stock = stock
 
+    def Mostrar(self):
+        print(f"Codigo:{self.id_codigo}- Nombre: {self.num_motor}- Categoria: {self.cilindrada}- Precio:{self.precio}- Stock: {self.stock}")
+
 class Categorias:
     def __init__(self, id_categoria, nombre):
         self.id_categoria = id_categoria
@@ -40,8 +43,6 @@ class Compras:
 
 class DetalleCompras:
     pass
-
-
 
 class Inventario:
     def Agregar(self):
@@ -68,14 +69,56 @@ class Inventario:
         except ValueError:
             print("Error: Ingresaste un dato inválido.\n")
 
+
+
+    def eliminar(self, codigo=None):
+        eli = input("Ingrese codigo del motor a eliminar:  ")
+        if eli not in Motores_Dic:
+            print("No existe en Inventario\n")
+        else:
+            eli = Motores_Dic.pop(eli)
+            print(f"Motor Eliminado:  {eli.nombre}  ")
+            print("Eliminado con exito\n")
+
+class Busqueda:
+    def Buscardor(self, lista, criterio, valor):
+        resultados = []
+        valor = valor.lower().strip()
+
+        for motor in lista:
+            if criterio == 1:
+                if Motores.codigo == valor:
+                    resultados.append(motor)
+            elif criterio == 2:
+                if valor in   Motores.nombre.lower():
+                    resultados.append(motor)
+            elif criterio == 3:
+                if valor in motor.categoria.lower():
+                    resultados.append(motor)
+
+        return resultados
+
+class Listar:
+    def quicksort(self, lista):
+        if len(lista) <= 1:
+            return lista
+        pivote = lista[0]
+
+        menores = [x for x in lista[1:] if x < pivote]
+        iguales = [x for x in lista if x == pivote]
+        mayores = [x for x in lista[1:] if x > pivote]
+
+        return self.quicksort(menores) + iguales + self.quicksort(mayores)
+
+class Modificar:
     def actualizar(self):
-        codigo = input("Ingrese el código del producto a actualizar: ")
+        codigo = input("Ingrese el código del Motor a actualizar: ")
         if codigo not in Motores_Dic:
-            print("No existe un producto con ese código.")
+            print("No existe un Motor con ese código.")
             return
 
         producto = Motores_Dic[codigo]
-        print("\nProducto actual:")
+        print("\nMotor actual:")
         producto.Mostrar()
 
         try:
@@ -96,44 +139,11 @@ class Inventario:
                 else:
                     print("Stock inválido, no se actualizó.")
 
-            print("\nProducto actualizado con éxito:")
+            print("\nMotor actualizado con éxito:")
             producto.Mostrar()
 
         except ValueError:
             print("Error: dato inválido, no se realizaron cambios.\n")
-
-    def eliminar(self, codigo=None):
-        eli = input("Ingrese codigo de producto a eliminar:  ")
-        if eli not in Motores_Dic:
-            print("No existe en dicionario\n")
-        else:
-            eli = Motores_Dic.pop(eli)
-            print(f"Producto Eliminado:  {eli.nombre}  ")
-            print("Eliminado con exito\n")
-
-class Busqueda:
-    def Buscardor(self, lista, criterio, valor):
-        resultados = []
-        valor = valor.lower().strip()
-
-        for producto in lista:
-            if criterio == 1:
-                if producto.codigo == valor:
-                    resultados.append(producto)
-            elif criterio == 2:
-                if valor in producto.nombre.lower():
-                    resultados.append(producto)
-            elif criterio == 3:
-                if valor in producto.categoria.lower():
-                    resultados.append(producto)
-
-        return resultados
-
-class Listar:
-    pass
-
-class Modificar:
-    pass
 
 class Menus:
     def MenuPrincipal(self):
@@ -151,6 +161,7 @@ class Main:
         listar = Listar()
         bus = Busqueda()
         menus = Menus()
+        modi = Modificar()
         op = 0
         while op != 6:
             try:
@@ -180,9 +191,7 @@ class Main:
                             print("\nInventario ordenado:\n")
                             for valor in listaordenada:
                                 for producto in Motores_Dic.values():
-                                    if (ordenar == 1 and producto.nombre == valor) or (
-                                            ordenar == 2 and producto.precio == valor) or (
-                                            ordenar == 3 and producto.stock == valor):
+                                    if (ordenar == 1 and producto.nombre == valor or ordenar == 2 and producto.precio == valor or ordenar == 3 and producto.stock == valor):
                                         producto.Mostrar()
                     case 3:
                         if not Motores_Dic:
@@ -199,17 +208,17 @@ class Main:
                                 for producto in resultados:
                                     producto.Mostrar()
                             else:
-                                print("No se encontraron productos con ese criterio.")
+                                print("No se encontraron Motores con ese criterio.")
                     case 4:
                         inven.eliminar()
                     case 5:
-                        inven.actualizar()
+                        modi.actualizar()
                     case 6:
                         print("Fin de programa")
                     case _:
-                        print("Opcion no valida")
+                        print("Opción no válida")
             except ValueError:
-                print("Ingrese opcion valida")
+                print("Ingrese una opción válida")
             except Exception:
                 print(f"Error: {Exception}")
 
