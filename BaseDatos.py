@@ -3,14 +3,19 @@ Ventas_Dic = {}
 Compras_Dic = {}
 
 class Personas:
-    def __init__(self, nombre, direccion, telefono, correo):
+    def __init__(self, nombre,nit, direccion, telefono, correo):
         self.nombre = nombre
+        self.nit = nit
         self.direccion = direccion
         self.telefono = telefono
         self.correo = correo
 
 class Empleados(Personas):
-    pass
+    def __init__(self, nombre, nit , direccion, telefono, correo, id_empleado, puesto):
+        super.__init__(nombre, nit, direccion, telefono, correo)
+        self.id_empleado = id_empleado
+        self.puesto = puesto
+
 
 class Clientes(Personas):
     pass
