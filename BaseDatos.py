@@ -149,17 +149,55 @@ class Proveedores:
             print("No hay proveedores registrados.")
 
 class Motores:
-    def __init__(self, id_codigo, nombre, categoria, precio, stock=0, total_compras=0, total_ventas=0):
-        self.id_codigo = id_codigo
-        self.nombre = nombre
-        self.categoria = categoria
-        self.precio = precio
-        self.stock = stock
-        self.total_compras = total_compras
-        self.total_ventas = total_ventas
+    def __init__(self):
+        self.motores = {}
+        self.cargar_motores()
 
-    def Mostrar(self):
-        print(f"Codigo:{self.id_codigo} - Nombre: {self.nombre} - Categoria: {self.categoria} - Precio: Q{self.precio} - Stock: {self.stock}")
+    def cargar_motores(self):
+        try:
+            with open("motores.txt", "r", encoding="utf-8") as archivo:
+                for linea in archivo:
+                    linea = linea.strip()
+                    if linea:
+                        id_codigo, cilindrada, categoria, precio, stock, total_compras, total_ventas = linea.split(":")
+                        self.motores[id_codigo] = {
+                            "Cilindrada": cilindrada,
+                            "Categoria": categoria,
+                            "Precio": precio,
+                            "Stock": stock,
+                            "Total_Compras": total_compras,
+                            "Total_Ventas": total_ventas
+                        }
+            print("Motores importados desde motores.txt")
+        except FileNotFoundError:
+            print("No existe el archivo motores.txt, se creará uno nuevo al guardar.")
+
+    def guardar_motores(self):
+        with open("motores.txt", "w", encoding="utf-8") as archivo:
+            for id_codigo, datos in self.motores.items():
+                archivo.write(f"{id_codigo}:{datos['Cilindrada']}:{datos['Categoria']}:{datos['Precio']}:{datos['Stock']}:{datos['Total_Compras']}:{datos['Total_Ventas']}\n")
+
+    def agregar_cliente(self, id_codigo, cilindrada, categoria, precio, stock, total_compras, total_ventas):
+        self.motores[id_codigo] = {
+            "Cilindrada": cilindrada,
+            "Categoria": categoria,
+            "Precio": precio,
+            "Stock": stock,
+            "Total_Compras": total_compras,
+            "Total_Ventas": total_ventas
+        }
+        self.guardar_motores()
+        print(f"Motor con id_codigo {id_codigo} agregado y guardado correctamente.")
+
+    def mostrar_motores(self):
+        if self.motores:
+            print("\nLista de motores:")
+            for id_codigo, datos in self.motores.items():
+                print(f"\nId: {id_codigo}")
+                for clave, valor in datos.items():
+                    print(f"{clave}: {valor}")
+        else:
+            print("No hay motores registrados.")
 
 class Categorias:
     def __init__(self, id_categoria, nombre):
