@@ -2,26 +2,151 @@ Motores_Dic = {}
 Ventas_Dic = {}
 Compras_Dic = {}
 
-class Personas:
-    def __init__(self, nombre,nit, direccion, telefono, correo):
-        self.nombre = nombre
-        self.nit = nit
-        self.direccion = direccion
-        self.telefono = telefono
-        self.correo = correo
+class Empleados:
+    def __init__(self):
+        self.empleados = {}
+        self.cargar_empleados()
 
-class Empleados(Personas):
-    def __init__(self, nombre, nit , direccion, telefono, correo, id_empleado, puesto):
-        super.__init__(nombre, nit, direccion, telefono, correo)
-        self.id_empleado = id_empleado
-        self.puesto = puesto
+    def cargar_empleados(self):
+        try:
+            with open("empleados.txt", "r", encoding="utf-8") as archivo:
+                for linea in archivo:
+                    linea = linea.strip()
+                    if linea:
+                        nit, nombre, direccion, telefono, correo, puesto = linea.split(":")
+                        self.empleados[nit] = {
+                            "Nombre": nombre,
+                            "Direccion": direccion,
+                            "Telefono": telefono,
+                            "Correo": correo,
+                            "Puesto" :puesto
+                        }
+            print("Empleados importados desde empleados.txt")
+        except FileNotFoundError:
+            print("No existe el archivo empleados.txt, se creará uno nuevo al guardar.")
+
+    def guardar_empleados(self):
+        with open("empleados.txt", "w", encoding="utf-8") as archivo:
+            for nit, datos in self.empleados.items():
+                archivo.write(f"{nit}:{datos['Nombre']}:{datos['Direccion']}:{datos['Telefono']}:{datos['Correo']}:{datos['Puesto']}\n")
+
+    def agregar_empleado(self, nit, nombre, direccion, telefono, correo, puesto):
+        self.empleados[nit] = {
+            "Nombre": nombre,
+            "Direccion": direccion,
+            "Telefono": telefono,
+            "Correo": correo,
+            "Puesto": puesto
+        }
+        self.guardar_empleados()
+        print(f"Empleado con NIT {nit} agregado y guardado correctamente.")
+
+    def mostrar_empleados(self):
+        if self.empleados:
+            print("\nLista de empleados:")
+            for nit, datos in self.empleados.items():
+                print(f"\nNIT: {nit}")
+                for clave, valor in datos.items():
+                    print(f"{clave}: {valor}")
+        else:
+            print("No hay empleados registrados.")
 
 
-class Clientes(Personas):
-    pass
+class Clientes:
+    def __init__(self):
+        self.clientes = {}
+        self.cargar_clientes()
 
-class Proveedores(Personas):
-    pass
+    def cargar_clientes(self):
+        try:
+            with open("clientes.txt", "r", encoding="utf-8") as archivo:
+                for linea in archivo:
+                    linea = linea.strip()
+                    if linea:
+                        nit, nombre, direccion, telefono, correo = linea.split(":")
+                        self.clientes[nit] = {
+                            "Nombre": nombre,
+                            "Direccion": direccion,
+                            "Telefono": telefono,
+                            "Correo": correo
+                        }
+            print("Clientes importados desde clientes.txt")
+        except FileNotFoundError:
+            print("No existe el archivo clientes.txt, se creará uno nuevo al guardar.")
+
+    def guardar_clientes(self):
+        with open("clientes.txt", "w", encoding="utf-8") as archivo:
+            for nit, datos in self.clientes.items():
+                archivo.write(f"{nit}:{datos['Nombre']}:{datos['Direccion']}:{datos['Telefono']}:{datos['Correo']}\n")
+
+    def agregar_cliente(self, nit, nombre, direccion, telefono, correo):
+        self.clientes[nit] = {
+            "Nombre": nombre,
+            "Direccion": direccion,
+            "Telefono": telefono,
+            "Correo": correo
+        }
+        self.guardar_clientes()
+        print(f"Cliente con NIT {nit} agregado y guardado correctamente.")
+
+    def mostrar_clientes(self):
+        if self.clientes:
+            print("\nLista de clientes:")
+            for nit, datos in self.clientes.items():
+                print(f"\nNIT: {nit}")
+                for clave, valor in datos.items():
+                    print(f"{clave}: {valor}")
+        else:
+            print("No hay clientes registrados.")
+
+class Proveedores:
+    def __init__(self):
+        self.proveedores = {}
+        self.cargar_proveedores()
+
+    def cargar_proveedores(self):
+        try:
+            with open("proveedores.txt", "r", encoding="utf-8") as archivo:
+                for linea in archivo:
+                    linea = linea.strip()
+                    if linea:
+                        nit, nombre, direccion, telefono, correo, empresa = linea.split(":")
+                        self.proveedores[nit] = {
+                            "Nombre": nombre,
+                            "Direccion": direccion,
+                            "Telefono": telefono,
+                            "Correo": correo,
+                            "Empresa": empresa
+                        }
+            print("Proveedores importados desde proveedores.txt")
+        except FileNotFoundError:
+            print("No existe el archivo proveedores.txt, se creará uno nuevo al guardar.")
+
+    def guardar_proveedores(self):
+        with open("proveedores.txt", "w", encoding="utf-8") as archivo:
+            for nit, datos in self.proveedores.items():
+                archivo.write(f"{nit}:{datos['Nombre']}:{datos['Direccion']}:{datos['Telefono']}:{datos['Correo']}:{datos['Empresa']}\n")
+
+    def agregar_cliente(self, nit, nombre, direccion, telefono, correo, empresa):
+        self.proveedores[nit] = {
+            "Nombre": nombre,
+            "Direccion": direccion,
+            "Telefono": telefono,
+            "Correo": correo,
+            "Empresa": empresa
+        }
+        self.guardar_proveedores()
+        print(f"Proveedor con NIT {nit} agregado y guardado correctamente.")
+
+    def mostrar_proveedores(self):
+        if self.proveedores:
+            print("\nLista de clientes:")
+            for nit, datos in self.proveedores.items():
+                print(f"\nNIT: {nit}")
+                for clave, valor in datos.items():
+                    print(f"{clave}: {valor}")
+        else:
+            print("No hay proveedores registrados.")
 
 class Motores:
     def __init__(self, id_codigo, nombre, categoria, precio, stock=0, total_compras=0, total_ventas=0):
@@ -200,6 +325,7 @@ class Menus:
 
 class Main:
     def Main(self):
+        clientes = Clientes()
         inven = Inventario()
         listar = Listar()
         bus = Busqueda()
