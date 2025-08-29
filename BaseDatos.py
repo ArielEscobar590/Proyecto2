@@ -200,9 +200,70 @@ class Motores:
             print("No hay motores registrados.")
 
 class Categorias:
-    def __init__(self, id_categoria, nombre):
-        self.id_categoria = id_categoria
-        self.nombre = nombre
+    def __init__(self):
+        self.categorias = {}
+        self.cargar_categorias()
+
+    def cargar_categorias(self):
+        try:
+            with open("categorias.txt", "r", encoding="utf-8") as archivo:
+                for linea in archivo:
+                    linea = linea.strip()
+                    if linea:
+                        id_categoria, nom_categoria = linea.split(":")
+                        self.categorias[id_categoria] = {
+                            "Categoria": nom_categoria,
+                        }
+            print("Categorias importadas desde categorias.txt")
+        except FileNotFoundError:
+            print("No existe el archivo categorias.txt, se creará uno nuevo al guardar.")
+
+    def guardar_categorias(self):
+        with open("categorias.txt", "w", encoding="utf-8") as archivo:
+            for id_categoria, datos in self.categorias.items():
+                archivo.write(
+                    f"{id_categoria}:{datos['Categoria']}\n")
+
+    def agregar_categoria(self, id_categoria, nom_categoria):
+        self.categorias[id_categoria] = {
+            "Categoria": nom_categoria,
+        }
+        self.guardar_categorias()
+        print(f"Categoria con id_categoria {id_categoria} agregado y guardado correctamente.")
+
+    def mostrar_categorias(self):
+        if self.categorias:
+            print("\nLista de categorias:")
+            for id_categoria, datos in self.categorias.items():
+                print(f"\nId: {id_categoria}")
+                for clave, valor in datos.items():
+                    print(f"{clave}: {valor}")
+        else:
+            print("No hay categorias registradas.")
+
+    class Modificar:
+        def actualizar(self):
+            codigo = input("Ingrese el código de la categoria a actualizar: ")
+            if codigo not in Categorias:
+                print("No existe una Categoria con ese código.")
+                return
+
+            cat = Categorias[codigo]
+            print("\nCategoria actual:")
+            cat.Mostrar()
+
+            try:
+                nom_Cat = input("Ingrese nuevo nombre de Categoria (deje vacío para no cambiar): ")
+
+                if nom_Cat.strip() != "":
+                        cat.nom_cat = nom_Cat
+                else:
+                    print("Precio inválido, no se actualizó.")
+
+                print("\nCategoria se actualizado con éxito:")
+                cat.Mostrar()
+            except Exception as e:
+                print(f"Error: {e}.\n")
 
 class Compras:
     def __init__(self, id_compra, proveedor, fecha):
@@ -246,14 +307,13 @@ class DetalleVentas:
 class Inventario:
     def Agregar(self):
         try:
-            agre = int(input("Cuantos productos desea ingresar: "))
+            agre = int(input("Cuantos motores desea ingresar: "))
             for a in range(agre):
-                cod = input("Ingrese código del producto: ")
+                cod = input("Ingrese código del motor: ")
                 if cod in Motores_Dic:
-                    print("Ya existe un producto con ese código.")
+                    print("Ya existe un motor con ese código.")
                     return
 
-                nom = input("Ingrese nombre del producto: ")
                 cat = input("Ingrese categoría: ")
                 pre = float(input("Ingrese precio del producto (Q): "))
                 if pre <= 0:
@@ -261,7 +321,7 @@ class Inventario:
                     return
                 sto = int(input("Ingrese cantidad del producto: "))
 
-                p = Motores(cod, nom, cat, pre, sto)
+                p = Motores(cod, cat, pre, sto, 0, 0)
                 Motores_Dic[cod] = p
                 print("Producto agregado con éxito.\n")
         except ValueError:
@@ -340,14 +400,17 @@ class Modificar:
 class Menus:
     def MenuPrincipal(self):
         print("\n--- MENÚ PRINCIPAL ---")
-        print("1. Ingreso de producto")
+        print("1. Ingreso de motor")
         print("2. Listar Inventario")
         print("3. Buscar producto")
         print("4. Eliminar producto")
         print("5. Modificar producto")
-        print("6. Registrar venta")
-        print("7. Registrar compra")
-        print("8. Salir")
+        print("6. Ingresar categorias")
+        print("7. Listar categorias")
+        print("8. Eliminar categorias")
+        print("9. Registrar venta")
+        print("10. Registrar compra")
+        print("11. Salir")
 
     def Submenu1(self):
         print("\n--- ORDENAR INVENTARIO ---")
@@ -419,6 +482,12 @@ class Main:
                     case 5:
                         modi.actualizar()
                     case 6:
+                        pass
+                    case 7:
+                        pass
+                    case 8:
+                        pass
+                    case 9:
                         print("\n--- Registrar venta ---")
                         id_venta = input("ID de la venta: ")
                         cliente = input("Cliente: ")
@@ -432,7 +501,7 @@ class Main:
                             print("Venta registrada con éxito.")
                         else:
                             print("El motor no existe.")
-                    case 7:
+                    case 10:
                         print("\n--- Registrar compra ---")
                         id_compra = input("ID de la compra: ")
                         proveedor = input("Proveedor: ")
@@ -446,7 +515,7 @@ class Main:
                             print("Compra registrada con éxito.")
                         else:
                             print("El motor no existe.")
-                    case 8:
+                    case 11:
                         print("Fin de programa")
                     case _:
                         print("Opción no válida")
