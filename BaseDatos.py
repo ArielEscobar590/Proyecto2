@@ -51,6 +51,10 @@ class Empleados:
         else:
             print("No hay empleados registrados.")
 
+class Verificaciones_Empleados(Empleados):
+    pass
+
+
 
 class Clientes:
     def __init__(self):
@@ -278,6 +282,51 @@ class Compras:
         motor.stock += cantidad
         motor.total_compras += cantidad
 
+    def __init__(self):
+        self.compras = {}
+        self.cargar_compras()
+
+    def cargar_compras(self):
+        try:
+            with open("compras.txt", "r", encoding="utf-8") as archivo:
+                for linea in archivo:
+                    linea = linea.strip()
+                    if linea:
+                        id_compras, proveedor, fecha, motor, cantidad = linea.split(":")
+                        self.compras[id_compras] = {
+                            "Proveedor": proveedor,
+                            "Fecha": fecha,
+                            "Motor" : motor,
+                            "Cantidad": cantidad
+                        }
+            print("Compras importados desde compras.txt")
+        except FileNotFoundError:
+            print("No existe el archivo compras.txt, se creará uno nuevo al guardar.")
+
+    def guardar_compras(self):
+        with open("compras.txt", "w", encoding="utf-8") as archivo:
+            for id_compras, datos in self.compras.items():
+                archivo.write(f"{id_compras}:{datos['Proveedor']}:{datos['Fecha']}:{datos['Motor']}:{datos['Cantidad']}\n")
+
+    def agregar_compras(self, id_compras, proveedor, fecha, motor, cantidad):
+        self.compras[id_compras] = {
+            "Proveedor": proveedor,
+            "Fecha": fecha,
+            "Motor" : motor,
+            "Cantidad": cantidad
+        }
+        self.guardar_compras()
+        print(f"Compra con id_compra {id_compras} agregado y guardado correctamente.")
+
+    def mostrar_compras(self):
+        if self.compras:
+            print("\nLista de compras:")
+            for id_compras, datos in self.compras.items():
+                print(f"\nID Compra: {id_compras}")
+                for clave, valor in datos.items():
+                    print(f"{clave}: {valor}")
+        else:
+            print("No hay compras registrados.")
 class DetalleCompras:
     def __init__(self, motor, cantidad):
         self.motor = motor
@@ -400,7 +449,7 @@ class Modificar:
 class Menus:
     def MenuPrincipal(self):
         print("\n--- MENÚ PRINCIPAL ---")
-        print("1. Ingreso de motor")
+        print("1. Compras de motores")
         print("2. Listar Inventario")
         print("3. Buscar producto")
         print("4. Eliminar producto")
@@ -439,6 +488,7 @@ class Main:
                 op = int(input("Ingrese opción a ejecutar: "))
                 match op:
                     case 1:
+
                         inven.Agregar()
                     case 2:
                         if not Motores_Dic:
