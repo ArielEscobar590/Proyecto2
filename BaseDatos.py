@@ -478,6 +478,9 @@ class Main:
         clientes = Clientes()
         inven = Inventario()
         listar = Listar()
+        motores = Motores()
+        compras = Compras()
+        ventas = Ventas()
         bus = Busqueda()
         menus = Menus()
         modi = Modificar()
@@ -488,7 +491,6 @@ class Main:
                 op = int(input("Ingrese opción a ejecutar: "))
                 match op:
                     case 1:
-
                         inven.Agregar()
                     case 2:
                         if not Motores_Dic:
